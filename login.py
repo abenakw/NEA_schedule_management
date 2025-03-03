@@ -1,6 +1,6 @@
 from tkinter import*
-
-
+import pymysql #pip install pymysql
+from tkinter import messagebox
 
 class Login_window:
     def __init__(self,root):
@@ -32,9 +32,23 @@ class Login_window:
 
 
 
+    def login(self):
+        if self.txt_email.get()=="" or self.txt_password_.get()=="":
+            messagebox.showerror("Error","All fields are required",parent=self.root)
+        else:
+            try:
+               conn=pymysql.connect(host="localhost",user="root",password="",database="employee2")
+               cur=conn.cursor()
+               cur.execute("Select * from employee where email=%s and password=%s",(self.txt_email.get(),self.txt_password_.get()))
+               row=cur.fetchone()
+               print(row)
+                
+            except Exception as es:
+                messagebox.showerror("Error",f"Error due to: {str(es)}",parent=self.root)
+
+
 
 if __name__=="__main__":
     root=Tk()
     obj=Login_window(root)
     root.mainloop()
-        
