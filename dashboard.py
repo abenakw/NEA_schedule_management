@@ -63,7 +63,8 @@ class RMS:
         
     def add_report(self):
         self.new_win=Toplevel(self.root)
-        self.new_obj=reportClass(self.new_win)                 
+        self.new_obj=reportClass(self.new_win)   
+                          
    
 if __name__=="__main__":
     root=Tk()
