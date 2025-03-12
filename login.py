@@ -1,7 +1,9 @@
 from tkinter import*
 import pymysql #pip install pymysql
-from tkinter import messagebox
-
+from tkinter import messagebox,ttk
+from dashboard import RMS
+import sqlite3
+import os
 class Login_window:
     def __init__(self,root):
         self.root=root
@@ -26,10 +28,15 @@ class Login_window:
         self.txt_password_=Entry(login_frame,font=("times new roman",15),bg="lightgray")
         self.txt_password_.place(x=250,y=280,width=350,height=35)
 
-        btn_reg=Button(login_frame,text="Register new account?",font=("times new roman",14),bg="white",bd=0,fg="#B00857",cursor="hand2").place(x=235,y=320)
+        btn_reg=Button(login_frame,text="Register new account?",command=self.register_window,font=("times new roman",14),bg="white",bd=0,fg="#B00857",cursor="hand2").place(x=235,y=320)
 
-        btn_login=Button(login_frame,text="Login",font=("times new roman",20,"bold"),fg="white",bg="#B00857",cursor="hand2").place(x=235,y=380,width=180,height=40)
+        btn_login=Button(login_frame,text="Login",command=self.login,font=("times new roman",20,"bold"),fg="white",bg="#B00857",cursor="hand2").place(x=235,y=380,width=180,height=40)
 
+
+
+    def register_window(self):
+        self.root.destroy()
+        import register
 
 
     def login(self):
@@ -37,18 +44,23 @@ class Login_window:
             messagebox.showerror("Error","All fields are required",parent=self.root)
         else:
             try:
-               conn=pymysql.connect(host="localhost",user="root",password="",database="employee2")
-               cur=conn.cursor()
-               cur.execute("Select * from employee where email=%s and password=%s",(self.txt_email.get(),self.txt_password_.get()))
-               row=cur.fetchone()
-               print(row)
-                
+                conn=sqlite3.connect(database="rms.db")
+                cur=conn.cursor()
+                cur.execute("Select * from employee where email=? and password=?",(self.txt_email.get(),self.txt_password_.get()))
+                row=cur.fetchone()
+                if row==None:
+                    messagebox.showerror("Error","Invalid username and password",parent=self.root)
+                    
+                else:
+                    messagebox.showinfo("Success",f"Welcome: {self.txt_email.get()}",parent=self.root)
+                    self.root.destroy()
+                    os.system("python dashboard.py")
+                conn.close()  
             except Exception as es:
                 messagebox.showerror("Error",f"Error due to: {str(es)}",parent=self.root)
 
 
 
-if __name__=="__main__":
-    root=Tk()
-    obj=Login_window(root)
-    root.mainloop()
+root=Tk()
+obj=Login_window(root)
+root.mainloop()
