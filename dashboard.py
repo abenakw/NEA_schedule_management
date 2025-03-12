@@ -3,7 +3,10 @@ from tkinter import *
 from course import CourseClass
 from student import studentClass
 from result import resultClass
-from report import reportClass
+from report import reportClass 
+from tkinter import messagebox
+import sqlite3
+import os
 class RMS:
     def __init__(self,root):
         self.root=root
@@ -29,8 +32,8 @@ class RMS:
         btn_student=Button(M_Frame,text="Students",font=("goudy old style",15,"bold"),bg="#0b5377",fg="white",cursor="hand2",command=self.add_student).place(x=240,y=5,width=200,height=40)
         btn_result=Button(M_Frame,text="Result",font=("goudy old style",15,"bold"),bg="#0b5377",fg="white",cursor="hand2",command=self.add_result).place(x=460,y=5,width=200,height=40)
         btn_view=Button(M_Frame,text="View Student Results",font=("goudy old style",15,"bold"),bg="#0b5377",fg="white",cursor="hand2",command=self.add_report).place(x=680,y=5,width=200,height=40)
-        btn_logout=Button(M_Frame,text="Logout",font=("goudy old style",15,"bold"),bg="#0b5377",fg="white",cursor="hand2").place(x=900,y=5,width=200,height=40)
-        btn_exit=Button(M_Frame,text="Exit",font=("goudy old style",15,"bold"),bg="#0b5377",fg="white",cursor="hand2").place(x=1120,y=5,width=200,height=40)
+        btn_logout=Button(M_Frame,text="Logout",font=("goudy old style",15,"bold"),bg="#0b5377",fg="white",cursor="hand2",command=self.logout).place(x=900,y=5,width=200,height=40)
+        btn_exit=Button(M_Frame,text="Exit",font=("goudy old style",15,"bold"),bg="#0b5377",fg="white",cursor="hand2",command=self.exit_).place(x=1120,y=5,width=200,height=40)
 
 
         #content window(19 mins onwards)
@@ -49,6 +52,31 @@ class RMS:
 #pick your own colours later, perhpas go for a modern theme
         #footer, i dont think its necessary, about 17 mins into vid)
 
+        self.update_details()
+
+    def update_details(self):
+        conn=sqlite3.connect(database="rms.db")
+        cur=conn.cursor()
+        try:
+            cur.execute("select * from course")
+            cr=cur.fetchall()
+            self.lbl_course.config(text=f"Total Courses\n[{str(len(cr))}]")
+            self.lbl_course.after(200,self.update_details)
+            
+            cur.execute("select * from student")
+            cr=cur.fetchall()
+            self.lbl_student.config(text=f"Total Students\n[{str(len(cr))}]")
+            self.lbl_student.after(200,self.update_details)
+            
+            
+            cur.execute("select * from result")
+            cr=cur.fetchall()
+            self.lbl_result.config(text=f"Total Results\n[{str(len(cr))}]")
+            self.lbl_result.after(200,self.update_details)
+            
+        except Exception as ex:
+            messagebox.showerror("Error",f"Error due to {str(ex)}")    
+
     def add_course(self):
         self.new_win=Toplevel(self.root)
         self.new_obj=CourseClass(self.new_win)
@@ -64,10 +92,21 @@ class RMS:
     def add_report(self):
         self.new_win=Toplevel(self.root)
         self.new_obj=reportClass(self.new_win)   
+        
+    def logout(self):
+        op=messagebox.askyesno("Confirm","Do you really want to logout?",parent=self.root)
+        if op==True:
+            self.root.destroy()
+            os.system("python login.py")        
                           
+    def exit_(self):
+        op=messagebox.askyesno("Confirm","Do you really want to exit?",parent=self.root)
+        if op==True:
+            self.root.destroy()
+            
+            
    
 if __name__=="__main__":
     root=Tk()
     obj=RMS(root)
     root.mainloop()
-
