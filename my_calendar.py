@@ -25,7 +25,7 @@ class my_calendarClass:
         def clear_events():
             event_listbox.delete(0, tk.END)            
 
-        root = tk.Tk()
+        root = tk.Tk() 
         root.title("The Calendar App")
 
         # This will create the calendar widget
