@@ -10,6 +10,9 @@ def create_db():
     
     cur.execute("CREATE TABLE IF NOT EXISTS result(rid INTEGER PRIMARY KEY AUTOINCREMENT,roll text,name text,course text,marks_ob text,full_marks text,per text)")
     conn.commit()
+
+    cur.execute("CREATE TABLE IF NOT EXISTS employee(cid INTEGER PRIMARY KEY AUTOINCREMENT,f_name text,l_name text,contact text,email text,question text,answer text,password text)")
+    conn.commit()
     
     conn.close()
     
