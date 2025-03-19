@@ -83,17 +83,17 @@ class Register:
         
         
     def register_data(self):
-        conn=sqlite3.connect(database="rms.db")
-        cur=conn.cursor()
         if self.txt_fname.get()=="" or self.txt_contact.get()=="" or self.txt_email.get()=="" or self.cmb_quest.get()=="Select" or self.txt_answer.get()=="" or self.txt_password.get()=="" or self.txt_cpassword.get()=="":
             messagebox.showerror("Error","All Fields Are Required",parent=self.root)     
         elif self.txt_password.get()!=self.txt_cpassword.get()=="":
             messagebox.showerror("Error","Password & Confirm Password should be the same",parent=self.root)
         else:
             try:
-                cur.execute("select * from employee where email=?",self.txt_email.get())
-                row=cur.fetchone
-                print(row)
+                conn=sqlite3.connect(database="rms.db")
+                cur=conn.cursor()
+                cur.execute("select * from employee where email=?",[self.txt_email.get()])
+                row=cur.fetchone()
+                #print(row)
                 if row!=None:
                     messagebox.showerror("Error","User already exists, please try again with another email",parent=self.root)
                 else:

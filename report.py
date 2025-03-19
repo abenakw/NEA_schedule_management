@@ -1,5 +1,4 @@
 from tkinter import *
-#unnecessary i think # from PIL import Image,ImageTk #pip install pillow
 from tkinter import ttk, messagebox
 import sqlite3
 class reportClass:

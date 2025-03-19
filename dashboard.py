@@ -49,10 +49,7 @@ class RMS:
         self.lbl_result=Label(self.root,text="Total Results\n[ 0 ]",font=("goudy old style",20),bd=10,relief=RIDGE,bg="#e43b06",fg="white")
         self.lbl_result.place(x=1020,y=530,width=300,height=100)
 
-#pick your own colours later, perhpas go for a modern theme
-        #footer, i dont think its necessary, about 17 mins into vid)
-
-        self.update_details()
+        #self.update_details()
 
     def update_details(self):
         conn=sqlite3.connect(database="rms.db")
